@@ -88,14 +88,14 @@
     <!-- User Portal -->
     <div id="user-portal-container" style="display: none;">
         <nav class="navbar navbar-dark bg-dark"><div class="container"><a class="navbar-brand" href="javascript:void(0);" onclick="showInitialView()"><i class="fas fa-building-user me-2"></i>MOHSIN ESTATE - User Portal</a><button id="logout-btn" class="btn btn-outline-warning d-none"><i class="fas fa-sign-out-alt me-2"></i>Logout</button></div></nav>
-        <div id="login-view" class="container" style="max-width: 400px; margin: 5rem auto;"><div class="card shadow-sm"><div class="card-header bg-primary text-white text-center"><h4><i class="fas fa-mobile-alt me-2"></i>Create Account / Login</h4></div><div class="card-body p-4"><p class="text-center text-muted">Enter your mobile number to manage your property listings.</p><form id="user-login-form"><div class="mb-3"><label for="mobileNumber" class="form-label">Mobile Number</label><input type="tel" class="form-control" id="mobileNumber" placeholder="e.g., 03001234567" required></div><button type="submit" class="btn btn-primary w-100"><i class="fas fa-sign-in-alt me-2"></i>Continue</button></form></div></div></div>
-        <div id="main-content" class="container mt-5 d-none"><div class="row"><div class="col-lg-5"><div class="card shadow-sm"><div class="card-header bg-primary text-white"><h4 id="form-title"><i class="fas fa-plus-circle me-2"></i>Add New Property</h4></div><div class="card-body"><form id="user-property-form"><input type="hidden" id="propertyId"><div class="mb-3"><label for="userPropertyTitle" class="form-label">Property Title</label><input type="text" class="form-control" id="userPropertyTitle" placeholder="e.g., Beautiful House in Sector 31-B" required></div><div class="mb-3"><label for="userLocation" class="form-label">Location</label><input type="text" class="form-control" id="userLocation" placeholder="e.g., Sector 31-B, KDA Employment Society" required></div><div class="mb-3"><label for="userStatus" class="form-label">Property Status</label><select class="form-select" id="userStatus" required><option value="">Select Status</option><option value="For Sale">For Sale</option><option value="For Rent">For Rent</option></select></div><div class="row"><div class="col-md-4"><div class="mb-3"><label for="userBeds" class="form-label">Bedrooms</label><select class="form-select" id="userBeds" required><option value="">Select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5+</option></select></div></div><div class="col-md-4"><div class="mb-3"><label for="userBaths" class="form-label">Bathrooms</label><select class="form-select" id="userBaths" required><option value="">Select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5+</option></select></div></div><div class="col-md-4"><div class="mb-3"><label for="userArea" class="form-label">Area (Sq. Yd.)</label><input type="number" class="form-control" id="userArea" placeholder="e.g., 120" required></div></div></div><div class="mb-3"><label for="userPrice" class="form-label">Price (PKR)</label><input type="number" class="form-control" id="userPrice" placeholder="e.g., 25000000" required></div><div class="mb-3"><label class="form-label">Property Images</label><div><button type="button" id="add-user-images-btn" class="btn btn-outline-secondary btn-sm mb-2"><i class="fas fa-image me-1"></i> Add Images</button><input type="file" id="user-property-images" class="d-none" accept="image/*" multiple></div><div id="user-image-preview-container" class="image-preview-container"></div></div><div class="mb-3"><label for="user-property-video" class="form-label">Property Video (Optional)</label><input type="file" class="form-control" id="user-property-video" accept="video/*"><div id="user-video-preview-container"></div></div><div class="d-grid gap-2"><button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Save Property</button><button type="button" id="cancel-edit-user" class="btn btn-secondary d-none"><i class="fas fa-times me-2"></i>Cancel Edit</button></div></form></div></div></div><div class="col-lg-7"><div class="card shadow-sm"><div class="card-header bg-dark text-white"><h4><i class="fas fa-list me-2"></i>Your Properties</h4></div><div class="card-body" style="max-height: 600px; overflow-y: auto;"><div id="user-property-list"></div></div></div></div></div></div>
+        <div id="login-view" class="container" style="max-width: 400px; margin: 5rem auto;"><div class="card shadow-sm"><div class="card-header bg-primary text-white text-center"><h4><i class="fas fa-mobile-alt me-2"></i>Create Account / Login</h4></div><div class="card-body p-4"><p class="text-center text-muted">Enter your mobile number to manage your property listings.</p><form id="user-login-form"><div class="mb-3"><label for="mobileNumber" class="form-label">Mobile Number</label><input type="tel" class="form-control" id="mobileNumber" placeholder="03XXXXXXXXX" required></div><button type="submit" class="btn btn-primary w-100">Login</button></form></div></div></div>
+        <div id="main-content" class="container mt-5 d-none"><div class="row"><div class="col-lg-5"><div class="card shadow-sm"><div class="card-header bg-primary text-white"><h4 id="form-title"><i class="fas fa-plus-circle me-2"></i>Add New Property</h4></div><div class="card-body"><form id="user-property-form"><input type="hidden" id="propertyId"><div class="mb-3"><label for="userPropertyTitle" class="form-label">Property Title</label><input type="text" class="form-control" id="userPropertyTitle" required></div><div class="mb-3"><label for="userPropertyType" class="form-label">Property Type</label><select class="form-select" id="userPropertyType" required><option value="">Choose...</option><option>House</option><option>Upper Portion</option><option>Lower Portion</option><option>Ground Floor</option><option>First Floor</option><option>Plot</option><option>Commercial</option><option>Shop</option><option>Office</option></select></div><div class="mb-3"><label for="userListingType" class="form-label">Listing Type</label><select class="form-select" id="userListingType" required><option value="">Choose...</option><option>For Sale</option><option>For Rent</option><option>Investment</option></select></div><div class="mb-3"><label for="userPrice" class="form-label">Price (PKR)</label><input type="number" class="form-control" id="userPrice" required></div><div class="mb-3"><label for="userSize" class="form-label">Size (Sq. Yd.)</label><input type="number" class="form-control" id="userSize" required></div><div class="mb-3"><label for="userBedrooms" class="form-label">Bedrooms</label><input type="number" class="form-control" id="userBedrooms" required></div><div class="mb-3"><label for="userBathrooms" class="form-label">Bathrooms</label><input type="number" class="form-control" id="userBathrooms" required></div><div class="mb-3"><label for="userLocation" class="form-label">Location</label><input type="text" class="form-control" id="userLocation" required></div><div class="mb-3"><label for="userDescription" class="form-label">Description</label><textarea class="form-control" id="userDescription" rows="3" required></textarea></div><div class="mb-3"><label for="userContact" class="form-label">Contact Number</label><input type="tel" class="form-control" id="userContact" placeholder="03XXXXXXXXX" required></div><div class="mb-3"><label class="form-label">Property Images</label><button type="button" id="add-user-images" class="btn btn-outline-secondary btn-sm me-2"><i class="fas fa-plus"></i> Add Images</button><input type="file" id="user-images" multiple accept="image/*" style="display: none;"><div id="user-image-previews" class="image-preview-container"></div></div><div class="mb-3"><label for="user-video" class="form-label">Property Video (Optional)</label><input type="file" class="form-control" id="user-video" accept="video/*"><div id="user-video-preview"></div></div><div class="d-grid gap-2 d-md-flex justify-content-md-end"><button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Save Property</button><button type="reset" class="btn btn-secondary" onclick="clearUserForm()"><i class="fas fa-times me-2"></i>Clear Form</button></div></form></div></div></div><div class="col-lg-7"><div class="card shadow-sm"><div class="card-header bg-secondary text-white"><h4><i class="fas fa-list me-2"></i>Your Property Listings</h4></div><div class="card-body"><div id="user-property-list"></div></div></div></div></div></div>
     </div>
     
     <!-- Admin Portal -->
     <div id="admin-portal-container" style="display: none;">
-        <div id="admin-login-container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center;"><div class="col-md-4"><div class="card shadow-sm"><div class="card-header bg-dark text-white text-center"><div class="d-flex justify-content-between align-items-center"><button class="btn btn-sm btn-outline-light" onclick="showInitialView()"><i class="fas fa-arrow-left"></i></button><h4 class="mb-0 flex-grow-1"><i class="fas fa-shield-halved me-2"></i>MOHSIN ESTATE - Admin Login</h4><div style="width: 32px;"></div></div></div><div class="card-body p-4"><form id="admin-login-form"><div class="mb-3"><label for="adminUsername" class="form-label">Admin Username</label><input type="text" class="form-control" id="adminUsername" placeholder="Enter admin username" required></div><div class="mb-3"><label for="adminPassword" class="form-label">Password</label><input type="password" class="form-control" id="adminPassword" placeholder="Enter password" required></div><button type="submit" class="btn btn-dark w-100"><i class="fas fa-sign-in-alt me-2"></i>Login</button></form></div></div></div></div>
-        <div id="admin-panel" style="display: none;"><nav class="navbar navbar-dark bg-dark"><div class="container"><a class="navbar-brand" href="javascript:void(0);" onclick="showInitialView()"><i class="fas fa-shield-halved me-2"></i>MOHSIN ESTATE - Admin Panel</a></div></nav><div class="container mt-4"><ul class="nav nav-tabs" id="adminTab" role="tablist"><li class="nav-item" role="presentation"><button class="nav-link active" id="add-property-tab" data-bs-toggle="tab" data-bs-target="#add-property" type="button" role="tab" aria-controls="add-property" aria-selected="true"><i class="fas fa-plus-circle me-2"></i>Add Property</button></li><li class="nav-item" role="presentation"><button class="nav-link" id="manage-properties-tab" data-bs-toggle="tab" data-bs-target="#manage-properties" type="button" role="tab" aria-controls="manage-properties" aria-selected="false"><i class="fas fa-cog me-2"></i>Manage Properties</button></li><li class="nav-item" role="presentation"><button class="nav-link" id="all-properties-tab" data-bs-toggle="tab" data-bs-target="#all-properties" type="button" role="tab" aria-controls="all-properties" aria-selected="false"><i class="fas fa-list me-2"></i>All Properties</button></li></ul><div class="tab-content" id="adminTabContent"><div class="tab-pane fade show active" id="add-property" role="tabpanel" aria-labelledby="add-property-tab"><div class="row mt-4"><div class="col-lg-6"><div class="card shadow-sm"><div class="card-header bg-primary text-white"><h4><i class="fas fa-plus-circle me-2"></i>Add New Property</h4></div><div class="card-body"><form id="admin-property-form"><div class="mb-3"><label for="adminPropertyTitle" class="form-label">Property Title</label><input type="text" class="form-control" id="adminPropertyTitle" placeholder="e.g., Beautiful House in Sector 31-B" required></div><div class="mb-3"><label for="adminLocation" class="form-label">Location</label><input type="text" class="form-control" id="adminLocation" placeholder="e.g., Sector 31-B, KDA Employment Society" required></div><div class="mb-3"><label for="adminStatus" class="form-label">Property Status</label><select class="form-select" id="adminStatus" required><option value="">Select Status</option><option value="For Sale">For Sale</option><option value="For Rent">For Rent</option></select></div><div class="row"><div class="col-md-4"><div class="mb-3"><label for="adminBeds" class="form-label">Bedrooms</label><select class="form-select" id="adminBeds" required><option value="">Select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5+</option></select></div></div><div class="col-md-4"><div class="mb-3"><label for="adminBaths" class="form-label">Bathrooms</label><select class="form-select" id="adminBaths" required><option value="">Select</option><option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5+</option></select></div></div><div class="col-md-4"><div class="mb-3"><label for="adminArea" class="form-label">Area (Sq. Yd.)</label><input type="number" class="form-control" id="adminArea" placeholder="e.g., 120" required></div></div></div><div class="mb-3"><label for="adminPrice" class="form-label">Price (PKR)</label><input type="number" class="form-control" id="adminPrice" placeholder="e.g., 25000000" required></div><div class="mb-3"><label class="form-label">Property Images</label><div><button type="button" id="add-admin-images-btn" class="btn btn-outline-secondary btn-sm mb-2"><i class="fas fa-image me-1"></i> Add Images</button><input type="file" id="admin-property-images" class="d-none" accept="image/*" multiple></div><div id="admin-image-preview-container" class="image-preview-container"></div></div><div class="mb-3"><label for="admin-property-video" class="form-label">Property Video (Optional)</label><input type="file" class="form-control" id="admin-property-video" accept="video/*"><div id="admin-video-preview-container"></div></div><div class="d-grid"><button type="submit" class="btn btn-primary btn-lg"><i class="fas fa-save me-2"></i>Add Property</button></div></form></div></div></div><div class="col-lg-6"><div class="card shadow-sm"><div class="card-header bg-success text-white"><h4><i class="fas fa-info-circle me-2"></i>Property Preview</h4></div><div class="card-body" id="admin-property-preview"><p class="text-muted text-center">Fill the form to see a preview of your property listing.</p></div></div></div></div></div><div class="tab-pane fade" id="manage-properties" role="tabpanel" aria-labelledby="manage-properties-tab"><div class="mt-4"><div class="card shadow-sm"><div class="card-header bg-warning text-dark"><h4><i class="fas fa-cog me-2"></i>Manage Your Properties</h4></div><div class="card-body" style="max-height: 600px; overflow-y: auto;"><div id="admin-manage-property-list"></div></div></div></div></div><div class="tab-pane fade" id="all-properties" role="tabpanel" aria-labelledby="all-properties-tab"><div class="mt-4"><div class="card shadow-sm"><div class="card-header bg-info text-white"><h4><i class="fas fa-list me-2"></i>All Properties</h4></div><div class="card-body" style="max-height: 600px; overflow-y: auto;"><div id="admin-all-property-list"></div></div></div></div></div></div></div></div>
+        <div id="admin-login-container" style="min-height: 100vh; display: flex; align-items: center; justify-content: center;"><div class="col-md-4"><div class="card shadow-sm"><div class="card-header bg-dark text-white text-center"><div class="d-flex justify-content-between align-items-center"><button class="btn btn-sm btn-outline-light" onclick="showInitialView()"><i class="fas fa-arrow-left"></i></button><h4 class="mb-0 flex-grow-1"><i class="fas fa-shield-halved me-2"></i>MOHSIN ESTATE - Admin Login</h4><div style="width: 28px;"></div></div></div><div class="card-body p-4"><form id="admin-login-form"><div class="mb-3"><label for="adminUsername" class="form-label">Username</label><input type="text" class="form-control" id="adminUsername" required></div><div class="mb-3"><label for="adminPassword" class="form-label">Password</label><input type="password" class="form-control" id="adminPassword" required></div><button type="submit" class="btn btn-dark w-100">Login</button></form></div></div></div></div>
+        <div id="admin-panel" style="display: none;"><nav class="navbar navbar-dark bg-dark"><div class="container"><a class="navbar-brand" href="javascript:void(0);" onclick="showInitialView()"><i class="fas fa-shield-halved me-2"></i>MOHSIN ESTATE - Admin Panel</a></div></nav><div class="container mt-4"><ul class="nav nav-tabs" id="adminTab" role="tablist"><li class="nav-item" role="presentation"><button class="nav-link active" id="add-property-tab" data-bs-toggle="tab" data-bs-target="#add-property" type="button" role="tab" aria-controls="add-property" aria-selected="true"><i class="fas fa-plus me-2"></i>Add Property</button></li><li class="nav-item" role="presentation"><button class="nav-link" id="all-properties-tab" data-bs-toggle="tab" data-bs-target="#all-properties" type="button" role="tab" aria-controls="all-properties" aria-selected="false"><i class="fas fa-list me-2"></i>All Properties</button></li></ul><div class="tab-content" id="adminTabContent"><div class="tab-pane fade show active" id="add-property" role="tabpanel" aria-labelledby="add-property-tab"><div class="row mt-4"><div class="col-lg-6"><div class="card shadow-sm"><div class="card-header bg-primary text-white"><h4 id="admin-form-title"><i class="fas fa-plus-circle me-2"></i>Add New Property</h4></div><div class="card-body"><form id="admin-property-form"><input type="hidden" id="adminPropertyId"><div class="mb-3"><label for="adminPropertyTitle" class="form-label">Property Title</label><input type="text" class="form-control" id="adminPropertyTitle" required></div><div class="mb-3"><label for="adminPropertyType" class="form-label">Property Type</label><select class="form-select" id="adminPropertyType" required><option value="">Choose...</option><option>House</option><option>Upper Portion</option><option>Lower Portion</option><option>Ground Floor</option><option>First Floor</option><option>Plot</option><option>Commercial</option><option>Shop</option><option>Office</option></select></div><div class="mb-3"><label for="adminListingType" class="form-label">Listing Type</label><select class="form-select" id="adminListingType" required><option value="">Choose...</option><option>For Sale</option><option>For Rent</option><option>Investment</option></select></div><div class="mb-3"><label for="adminPrice" class="form-label">Price (PKR)</label><input type="number" class="form-control" id="adminPrice" required></div><div class="mb-3"><label for="adminSize" class="form-label">Size (Sq. Yd.)</label><input type="number" class="form-control" id="adminSize" required></div><div class="mb-3"><label for="adminBedrooms" class="form-label">Bedrooms</label><input type="number" class="form-control" id="adminBedrooms" required></div><div class="mb-3"><label for="adminBathrooms" class="form-label">Bathrooms</label><input type="number" class="form-control" id="adminBathrooms" required></div><div class="mb-3"><label for="adminLocation" class="form-label">Location</label><input type="text" class="form-control" id="adminLocation" required></div><div class="mb-3"><label for="adminDescription" class="form-label">Description</label><textarea class="form-control" id="adminDescription" rows="3" required></textarea></div><div class="mb-3"><label for="adminContact" class="form-label">Contact Number</label><input type="tel" class="form-control" id="adminContact" placeholder="03XXXXXXXXX" required></div><div class="mb-3"><label class="form-label">Property Images</label><button type="button" id="add-admin-images" class="btn btn-outline-secondary btn-sm me-2"><i class="fas fa-plus"></i> Add Images</button><input type="file" id="admin-images" multiple accept="image/*" style="display: none;"><div id="admin-image-previews" class="image-preview-container"></div></div><div class="mb-3"><label for="admin-video" class="form-label">Property Video (Optional)</label><input type="file" class="form-control" id="admin-video" accept="video/*"><div id="admin-video-preview"></div></div><div class="d-grid gap-2 d-md-flex justify-content-md-end"><button type="submit" class="btn btn-primary"><i class="fas fa-save me-2"></i>Save Property</button><button type="reset" class="btn btn-secondary" onclick="clearAdminForm()"><i class="fas fa-times me-2"></i>Clear Form</button></div></form></div></div></div></div></div><div class="tab-pane fade" id="all-properties" role="tabpanel" aria-labelledby="all-properties-tab"><div class="mt-4"><div class="card shadow-sm"><div class="card-header bg-secondary text-white"><h4><i class="fas fa-list me-2"></i>All Property Listings</h4></div><div class="card-body"><div id="admin-property-list"></div></div></div></div></div></div></div></div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
@@ -239,274 +239,210 @@
             const userLoginForm = document.getElementById('user-login-form'), logoutBtn = document.getElementById('logout-btn');
             const userPropertyForm = document.getElementById('user-property-form'), userPropertyList = document.getElementById('user-property-list');
 
-            let currentUserMobile = null, editingPropertyId = null;
-            const userImageUploader = setupImageUploader('user-property-images', 'add-user-images-btn', 'user-image-preview-container');
-            setupVideoPreview('user-property-video', 'user-video-preview-container');
+            let currentUserMobile = '', userImageUploader = null, isEditingUser = false;
+            userLoginForm.addEventListener('submit', (e) => { e.preventDefault(); currentUserMobile = document.getElementById('mobileNumber').value.trim(); if (currentUserMobile) { loginView.classList.add('d-none'); mainContentView.classList.remove('d-none'); logoutBtn.classList.remove('d-none'); loadUserProperties(); } });
+            logoutBtn.addEventListener('click', () => { currentUserMobile = ''; loginView.classList.remove('d-none'); mainContentView.classList.add('d-none'); logoutBtn.classList.add('d-none'); clearUserForm(); });
 
-            userLoginForm.addEventListener('submit', function(e) {
+            userPropertyForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const mobile = document.getElementById('mobileNumber').value.trim();
-                if (mobile) {
-                    currentUserMobile = mobile;
-                    loginView.style.display = 'none';
-                    mainContentView.classList.remove('d-none');
-                    logoutBtn.classList.remove('d-none');
-                    loadUserProperties();
-                }
-            });
-
-            logoutBtn.addEventListener('click', function() {
-                currentUserMobile = null; editingPropertyId = null;
-                loginView.style.display = 'block';
-                mainContentView.classList.add('d-none');
-                logoutBtn.classList.add('d-none');
-                document.getElementById('mobileNumber').value = '';
-                userPropertyForm.reset(); userImageUploader.clear();
-                document.getElementById('form-title').innerHTML = '<i class="fas fa-plus-circle me-2"></i>Add New Property';
-                document.getElementById('cancel-edit-user').classList.add('d-none');
-            });
-
-            userPropertyForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const property = {
-                    id: editingPropertyId || Date.now().toString(),
-                    title: document.getElementById('userPropertyTitle').value.trim(),
-                    location: document.getElementById('userLocation').value.trim(),
-                    status: document.getElementById('userStatus').value,
-                    beds: document.getElementById('userBeds').value,
-                    baths: document.getElementById('userBaths').value,
-                    area: parseInt(document.getElementById('userArea').value),
-                    price: parseInt(document.getElementById('userPrice').value),
-                    images: [],
-                    video: null,
-                    ownerMobile: currentUserMobile,
-                    createdAt: editingPropertyId ? (await getPropertyCreatedAt(editingPropertyId)) : new Date().toISOString()
+                const formData = new FormData(userPropertyForm);
+                const propertyData = {
+                    id: document.getElementById('propertyId').value || 'user-' + Date.now(),
+                    title: document.getElementById('userPropertyTitle').value, type: document.getElementById('userPropertyType').value, listingType: document.getElementById('userListingType').value,
+                    price: parseFloat(document.getElementById('userPrice').value), size: parseFloat(document.getElementById('userSize').value), bedrooms: parseInt(document.getElementById('userBedrooms').value),
+                    bathrooms: parseInt(document.getElementById('userBathrooms').value), location: document.getElementById('userLocation').value, description: document.getElementById('userDescription').value,
+                    contact: document.getElementById('userContact').value, ownerMobile: currentUserMobile, images: [], video: null, createdAt: isEditingUser ? document.getElementById('propertyId').value.split('-')[1] : Date.now()
                 };
 
-                // Process images
-                const imageFiles = userImageUploader.getFiles();
-                for (const file of imageFiles) {
-                    property.images.push(await toBase64(file));
+                if (userImageUploader) {
+                    for (const file of userImageUploader.getFiles()) { propertyData.images.push(await toBase64(file)); }
                 }
+                const videoFile = document.getElementById('user-video').files[0];
+                if (videoFile) { propertyData.video = await toBase64(videoFile); }
 
-                // Process video
-                const videoFile = document.getElementById('user-property-video').files[0];
-                if (videoFile) {
-                    property.video = await toBase64(videoFile);
-                }
-
-                await propertyDB.put(property);
-                
-                userPropertyForm.reset();
-                userImageUploader.clear();
-                document.getElementById('user-video-preview-container').innerHTML = '';
-                editingPropertyId = null;
-                document.getElementById('form-title').innerHTML = '<i class="fas fa-plus-circle me-2"></i>Add New Property';
-                document.getElementById('cancel-edit-user').classList.add('d-none');
-                
+                await propertyDB.put(propertyData);
+                clearUserForm();
                 await loadUserProperties();
-                alert('Property saved successfully!');
             });
-
-            document.getElementById('cancel-edit-user').addEventListener('click', function() {
-                userPropertyForm.reset();
-                userImageUploader.clear();
-                document.getElementById('user-video-preview-container').innerHTML = '';
-                editingPropertyId = null;
-                document.getElementById('form-title').innerHTML = '<i class="fas fa-plus-circle me-2"></i>Add New Property';
-                this.classList.add('d-none');
-            });
-
-            async function getPropertyCreatedAt(id) {
-                const properties = await propertyDB.getAll();
-                const property = properties.find(p => p.id === id);
-                return property ? property.createdAt : new Date().toISOString();
-            }
-
-            async function loadUserProperties() {
-                if (!currentUserMobile) return;
-                
-                const properties = await propertyDB.getAll();
-                const userProperties = properties.filter(p => p.ownerMobile === currentUserMobile);
-                
-                userPropertyList.innerHTML = userProperties.length === 0 ? 
-                    '<p class="text-muted text-center">No properties added yet.</p>' : 
-                    userProperties.map(p => `
-                        <div class="border rounded p-3 mb-3">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h6 class="mb-1">${p.title}</h6>
-                                    <small class="text-muted">${p.location} • ${p.status}</small>
-                                    <p class="mb-1"><strong>PKR ${p.price.toLocaleString()}</strong></p>
-                                    <small>${p.beds} bed • ${p.baths} bath • ${p.area} sq.yd</small>
-                                </div>
-                                <div class="btn-group-vertical btn-group-sm">
-                                    <button class="btn btn-outline-primary btn-sm" onclick="editUserProperty('${p.id}')">
-                                        <i class="fas fa-edit"></i>
-                                    </button>
-                                    <button class="btn btn-outline-danger btn-sm" onclick="deleteProperty('${p.id}')">
-                                        <i class="fas fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    `).join('');
-            }
 
             window.editUserProperty = async function(id) {
                 const properties = await propertyDB.getAll();
                 const property = properties.find(p => p.id === id);
-                if (!property) return;
-
-                editingPropertyId = id;
-                document.getElementById('userPropertyTitle').value = property.title;
-                document.getElementById('userLocation').value = property.location;
-                document.getElementById('userStatus').value = property.status;
-                document.getElementById('userBeds').value = property.beds;
-                document.getElementById('userBaths').value = property.baths;
-                document.getElementById('userArea').value = property.area;
-                document.getElementById('userPrice').value = property.price;
-                
-                document.getElementById('form-title').innerHTML = '<i class="fas fa-edit me-2"></i>Edit Property';
-                document.getElementById('cancel-edit-user').classList.remove('d-none');
+                if (property) {
+                    document.getElementById('propertyId').value = property.id;
+                    document.getElementById('userPropertyTitle').value = property.title;
+                    document.getElementById('userPropertyType').value = property.type;
+                    document.getElementById('userListingType').value = property.listingType;
+                    document.getElementById('userPrice').value = property.price;
+                    document.getElementById('userSize').value = property.size;
+                    document.getElementById('userBedrooms').value = property.bedrooms;
+                    document.getElementById('userBathrooms').value = property.bathrooms;
+                    document.getElementById('userLocation').value = property.location;
+                    document.getElementById('userDescription').value = property.description;
+                    document.getElementById('userContact').value = property.contact;
+                    document.getElementById('form-title').innerHTML = '<i class="fas fa-edit me-2"></i>Edit Property';
+                    isEditingUser = true;
+                }
             };
+
+            async function loadUserProperties() {
+                const properties = await propertyDB.getAll();
+                const userProperties = properties.filter(p => p.ownerMobile === currentUserMobile);
+                userPropertyList.innerHTML = userProperties.length === 0 ? '<p class="text-muted text-center">No properties listed yet.</p>' : userProperties.map(property => `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-start">
+                                <div>
+                                    <h6 class="card-title">${property.title}</h6>
+                                    <p class="card-text text-muted mb-1">${property.type} - ${property.listingType}</p>
+                                    <p class="card-text"><strong>PKR ${property.price.toLocaleString()}</strong> | ${property.size} Sq. Yd.</p>
+                                    <p class="card-text"><small class="text-muted">${property.location}</small></p>
+                                </div>
+                                <div class="btn-group btn-group-sm">
+                                    <button onclick="editUserProperty('${property.id}')" class="btn btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                    <button onclick="deleteProperty('${property.id}')" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            function clearUserForm() {
+                userPropertyForm.reset();
+                document.getElementById('propertyId').value = '';
+                document.getElementById('form-title').innerHTML = '<i class="fas fa-plus-circle me-2"></i>Add New Property';
+                if (userImageUploader) { userImageUploader.clear(); }
+                document.getElementById('user-video-preview').innerHTML = '';
+                isEditingUser = false;
+            }
+            window.clearUserForm = clearUserForm;
+
+            userImageUploader = setupImageUploader('user-images', 'add-user-images', 'user-image-previews');
+            setupVideoPreview('user-video', 'user-video-preview');
         });
 
         // --- Admin Portal Logic ---
         document.addEventListener('DOMContentLoaded', function() {
+            const adminLoginContainer = document.getElementById('admin-login-container'), adminPanel = document.getElementById('admin-panel');
             const adminLoginForm = document.getElementById('admin-login-form');
-            const adminPropertyForm = document.getElementById('admin-property-form');
-            const adminManagePropertyList = document.getElementById('admin-manage-property-list');
-            const adminAllPropertyList = document.getElementById('admin-all-property-list');
+            const adminPropertyForm = document.getElementById('admin-property-form'), adminPropertyList = document.getElementById('admin-property-list');
 
-            const adminImageUploader = setupImageUploader('admin-property-images', 'add-admin-images-btn', 'admin-image-preview-container');
-            setupVideoPreview('admin-property-video', 'admin-video-preview-container');
+            let adminImageUploader = null, isEditingAdmin = false;
+            adminLoginForm.addEventListener('submit', (e) => { e.preventDefault(); const username = document.getElementById('adminUsername').value, password = document.getElementById('adminPassword').value; if (username === 'admin' && password === 'mohsinestate123') { adminLoginContainer.style.display = 'none'; adminPanel.style.display = 'block'; loadAdminProperties(); loadAllProperties(); } else { alert('Invalid credentials!'); } });
 
-            adminLoginForm.addEventListener('submit', function(e) {
+            adminPropertyForm.addEventListener('submit', async (e) => {
                 e.preventDefault();
-                const username = document.getElementById('adminUsername').value;
-                const password = document.getElementById('adminPassword').value;
-                
-                if (username === 'admin' && password === 'admin123') {
-                    document.getElementById('admin-login-container').style.display = 'none';
-                    document.getElementById('admin-panel').style.display = 'block';
-                    loadAdminProperties();
-                    loadAllProperties();
-                } else {
-                    alert('Invalid credentials! Use admin/admin123');
-                }
-            });
-
-            adminPropertyForm.addEventListener('submit', async function(e) {
-                e.preventDefault();
-                
-                const property = {
-                    id: Date.now().toString(),
-                    title: document.getElementById('adminPropertyTitle').value.trim(),
-                    location: document.getElementById('adminLocation').value.trim(),
-                    status: document.getElementById('adminStatus').value,
-                    beds: document.getElementById('adminBeds').value,
-                    baths: document.getElementById('adminBaths').value,
-                    area: parseInt(document.getElementById('adminArea').value),
-                    price: parseInt(document.getElementById('adminPrice').value),
-                    images: [],
-                    video: null,
-                    ownerMobile: 'admin',
-                    createdAt: new Date().toISOString()
+                const propertyData = {
+                    id: document.getElementById('adminPropertyId').value || 'admin-' + Date.now(),
+                    title: document.getElementById('adminPropertyTitle').value, type: document.getElementById('adminPropertyType').value, listingType: document.getElementById('adminListingType').value,
+                    price: parseFloat(document.getElementById('adminPrice').value), size: parseFloat(document.getElementById('adminSize').value), bedrooms: parseInt(document.getElementById('adminBedrooms').value),
+                    bathrooms: parseInt(document.getElementById('adminBathrooms').value), location: document.getElementById('adminLocation').value, description: document.getElementById('adminDescription').value,
+                    contact: document.getElementById('adminContact').value, ownerMobile: 'admin', images: [], video: null, createdAt: isEditingAdmin ? document.getElementById('adminPropertyId').value.split('-')[1] : Date.now()
                 };
 
-                // Process images
-                const imageFiles = adminImageUploader.getFiles();
-                for (const file of imageFiles) {
-                    property.images.push(await toBase64(file));
+                if (adminImageUploader) {
+                    for (const file of adminImageUploader.getFiles()) { propertyData.images.push(await toBase64(file)); }
                 }
+                const videoFile = document.getElementById('admin-video').files[0];
+                if (videoFile) { propertyData.video = await toBase64(videoFile); }
 
-                // Process video
-                const videoFile = document.getElementById('admin-property-video').files[0];
-                if (videoFile) {
-                    property.video = await toBase64(videoFile);
-                }
-
-                await propertyDB.put(property);
-                
-                adminPropertyForm.reset();
-                adminImageUploader.clear();
-                document.getElementById('admin-video-preview-container').innerHTML = '';
-                
+                await propertyDB.put(propertyData);
+                clearAdminForm();
                 await loadAdminProperties();
                 await loadAllProperties();
-                alert('Property added successfully!');
             });
+
+            window.editAdminProperty = async function(id) {
+                const properties = await propertyDB.getAll();
+                const property = properties.find(p => p.id === id);
+                if (property) {
+                    document.getElementById('adminPropertyId').value = property.id;
+                    document.getElementById('adminPropertyTitle').value = property.title;
+                    document.getElementById('adminPropertyType').value = property.type;
+                    document.getElementById('adminListingType').value = property.listingType;
+                    document.getElementById('adminPrice').value = property.price;
+                    document.getElementById('adminSize').value = property.size;
+                    document.getElementById('adminBedrooms').value = property.bedrooms;
+                    document.getElementById('adminBathrooms').value = property.bathrooms;
+                    document.getElementById('adminLocation').value = property.location;
+                    document.getElementById('adminDescription').value = property.description;
+                    document.getElementById('adminContact').value = property.contact;
+                    document.getElementById('admin-form-title').innerHTML = '<i class="fas fa-edit me-2"></i>Edit Property';
+                    document.getElementById('add-property-tab').click();
+                    isEditingAdmin = true;
+                }
+            };
 
             async function loadAdminProperties() {
                 const properties = await propertyDB.getAll();
                 const adminProperties = properties.filter(p => p.ownerMobile === 'admin');
-                
-                adminManagePropertyList.innerHTML = adminProperties.length === 0 ? 
-                    '<p class="text-muted text-center">No admin properties found.</p>' : 
-                    adminProperties.map(p => `
-                        <div class="border rounded p-3 mb-3">
+                adminPropertyList.innerHTML = adminProperties.length === 0 ? '<p class="text-muted text-center">No admin properties added yet.</p>' : adminProperties.map(property => `
+                    <div class="card mb-3">
+                        <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
-                                    <h6 class="mb-1">${p.title}</h6>
-                                    <small class="text-muted">${p.location} • ${p.status}</small>
-                                    <p class="mb-1"><strong>PKR ${p.price.toLocaleString()}</strong></p>
-                                    <small>${p.beds} bed • ${p.baths} bath • ${p.area} sq.yd</small>
+                                    <h6 class="card-title">${property.title}</h6>
+                                    <p class="card-text text-muted mb-1">${property.type} - ${property.listingType}</p>
+                                    <p class="card-text"><strong>PKR ${property.price.toLocaleString()}</strong> | ${property.size} Sq. Yd.</p>
+                                    <p class="card-text"><small class="text-muted">${property.location}</small></p>
                                 </div>
-                                <button class="btn btn-outline-danger btn-sm" onclick="deleteProperty('${p.id}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                <div class="btn-group btn-group-sm">
+                                    <button onclick="editAdminProperty('${property.id}')" class="btn btn-outline-primary"><i class="fas fa-edit"></i></button>
+                                    <button onclick="deleteProperty('${property.id}')" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>
                             </div>
                         </div>
-                    `).join('');
+                    </div>
+                `).join('');
             }
 
             async function loadAllProperties() {
                 const properties = await propertyDB.getAll();
+                const allPropertiesContainer = document.getElementById('all-properties');
+                if (!allPropertiesContainer) return;
                 
-                adminAllPropertyList.innerHTML = properties.length === 0 ? 
-                    '<p class="text-muted text-center">No properties found.</p>' : 
-                    properties.map(p => `
-                        <div class="border rounded p-3 mb-3">
+                const allPropertiesList = document.createElement('div');
+                allPropertiesList.innerHTML = properties.length === 0 ? '<p class="text-muted text-center">No properties in the system.</p>' : properties.map(property => `
+                    <div class="card mb-3">
+                        <div class="card-body">
                             <div class="d-flex justify-content-between align-items-start">
                                 <div>
-                                    <h6 class="mb-1">${p.title}</h6>
-                                    <small class="text-muted">${p.location} • ${p.status} • Owner: ${p.ownerMobile}</small>
-                                    <p class="mb-1"><strong>PKR ${p.price.toLocaleString()}</strong></p>
-                                    <small>${p.beds} bed • ${p.baths} bath • ${p.area} sq.yd</small>
+                                    <h6 class="card-title">${property.title} <span class="badge bg-${property.ownerMobile === 'admin' ? 'primary' : 'secondary'}">${property.ownerMobile === 'admin' ? 'Admin' : 'User'}</span></h6>
+                                    <p class="card-text text-muted mb-1">${property.type} - ${property.listingType}</p>
+                                    <p class="card-text"><strong>PKR ${property.price.toLocaleString()}</strong> | ${property.size} Sq. Yd.</p>
+                                    <p class="card-text"><small class="text-muted">${property.location}</small></p>
+                                    <p class="card-text"><small class="text-muted">Contact: ${property.contact}</small></p>
                                 </div>
-                                <button class="btn btn-outline-danger btn-sm" onclick="deleteProperty('${p.id}')">
-                                    <i class="fas fa-trash"></i>
-                                </button>
+                                <div class="btn-group btn-group-sm">
+                                    <button onclick="deleteProperty('${property.id}')" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
+                                </div>
                             </div>
                         </div>
-                    `).join('');
+                    </div>
+                `).join('');
+                
+                const existingList = allPropertiesContainer.querySelector('div:not(.nav-tabs):not(.tab-content)');
+                if (existingList) {
+                    existingList.replaceWith(allPropertiesList);
+                } else {
+                    allPropertiesContainer.appendChild(allPropertiesList);
+                }
             }
+
+            function clearAdminForm() {
+                adminPropertyForm.reset();
+                document.getElementById('adminPropertyId').value = '';
+                document.getElementById('admin-form-title').innerHTML = '<i class="fas fa-plus-circle me-2"></i>Add New Property';
+                if (adminImageUploader) { adminImageUploader.clear(); }
+                document.getElementById('admin-video-preview').innerHTML = '';
+                isEditingAdmin = false;
+            }
+            window.clearAdminForm = clearAdminForm;
+
+            adminImageUploader = setupImageUploader('admin-images', 'add-admin-images', 'admin-image-previews');
+            setupVideoPreview('admin-video', 'admin-video-preview');
         });
-    </script> 
-    <script src="script.js"></script>
-<script>
-  document.getElementById("admin-property-form").addEventListener("submit", async function (e) {
-    e.preventDefault();
-
-    const property = {
-      title: document.getElementById("adminPropertyTitle").value,
-      location: document.getElementById("adminPropertyLocation").value,
-      status: document.getElementById("adminPropertyStatus").value,
-      beds: document.getElementById("adminPropertyBeds").value,
-      baths: document.getElementById("adminPropertyBaths").value,
-      area: document.getElementById("adminPropertyArea").value,
-      price: document.getElementById("adminPropertyPrice").value,
-      images: [document.getElementById("adminPropertyImage").value],
-      video: document.getElementById("adminPropertyVideo").value
-    };
-
-    await saveProperty(property);
-    alert("Property saved!");
-    e.target.reset();
-  });
-</script>
-
+    </script>
 </body>
 </html>
