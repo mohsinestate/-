@@ -695,5 +695,40 @@
             });
         });
     </script>
+    <script src="script.js"></script>
+<script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const container = document.getElementById("property-listings");
+    const properties = await getProperties();
+
+    if (!properties.length) {
+      container.innerHTML = '<p class="text-center text-muted">No properties yet.</p>';
+      return;
+    }
+
+    container.innerHTML = "";
+    properties.forEach(p => {
+      const card = `
+        <div class="col-12 col-md-6 col-lg-4">
+          <div class="property-card h-100">
+            <div class="property-media-container">
+              <img src="${p.images && p.images[0] ? p.images[0] : 'https://via.placeholder.com/400x250'}" alt="${p.title}">
+              <div class="property-badge">${p.status}</div>
+            </div>
+            <div class="property-content">
+              <h5>${p.title}</h5>
+              <p class="text-muted"><i class="fas fa-map-marker-alt me-2"></i>${p.location}</p>
+              <div class="mb-2"><i class="fa-solid fa-bed"></i> ${p.beds} | <i class="fa-solid fa-bath"></i> ${p.baths} | <i class="fa-solid fa-ruler-combined"></i> ${p.area} sqft</div>
+              <div class="property-price">$${p.price}</div>
+              ${p.video ? `<div class="mt-2"><iframe width="100%" height="200" src="${p.video}" frameborder="0" allowfullscreen></iframe></div>` : ""}
+            </div>
+          </div>
+        </div>
+      `;
+      container.innerHTML += card;
+    });
+  });
+</script>
+
 </body>
 </html>
