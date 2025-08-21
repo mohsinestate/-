@@ -100,52 +100,37 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // --- IndexedDB Helper ---
-        const propertyDB = {
-            db: null,
-            init: function() {
-                return new Promise((resolve, reject) => {
-                    if (this.db) return resolve();
-                    const request = indexedDB.open('mohsinEstateDB', 1);
-                    request.onerror = (e) => reject("DB Error: " + e.target.errorCode);
-                    request.onsuccess = (e) => { this.db = e.target.result; resolve(); };
-                    request.onupgradeneeded = (e) => {
-                        const db = e.target.result;
-                        if (!db.objectStoreNames.contains('properties')) {
-                            db.createObjectStore('properties', { keyPath: 'id' });
-                        }
-                    };
-                });
+        // --- LocalStorage Helper ---
+        const propertyStorage = {
+            getAll: function() {
+                const properties = localStorage.getItem('mohsinEstate_properties');
+                return properties ? JSON.parse(properties) : [];
             },
-            async getAll() {
-                await this.init();
-                return new Promise((resolve, reject) => {
-                    const transaction = this.db.transaction('properties', 'readonly');
-                    const store = transaction.objectStore('properties');
-                    const request = store.getAll();
-                    request.onsuccess = () => resolve(request.result);
-                    request.onerror = (e) => reject(e.target.error);
-                });
+            save: function(property) {
+                const properties = this.getAll();
+                if (property.id) {
+                    // Update existing property
+                    const index = properties.findIndex(p => p.id === property.id);
+                    if (index !== -1) {
+                        properties[index] = property;
+                    } else {
+                        properties.push(property);
+                    }
+                } else {
+                    // Add new property
+                    property.id = Date.now().toString();
+                    properties.push(property);
+                }
+                localStorage.setItem('mohsinEstate_properties', JSON.stringify(properties));
+                return property;
             },
-            async put(property) {
-                await this.init();
-                return new Promise((resolve, reject) => {
-                    const transaction = this.db.transaction('properties', 'readwrite');
-                    const store = transaction.objectStore('properties');
-                    const request = store.put(property);
-                    request.onsuccess = () => resolve();
-                    request.onerror = (e) => reject(e.target.error);
-                });
+            delete: function(id) {
+                const properties = this.getAll();
+                const filtered = properties.filter(p => p.id !== id);
+                localStorage.setItem('mohsinEstate_properties', JSON.stringify(filtered));
             },
-            async delete(id) {
-                await this.init();
-                return new Promise((resolve, reject) => {
-                    const transaction = this.db.transaction('properties', 'readwrite');
-                    const store = transaction.objectStore('properties');
-                    const request = store.delete(id);
-                    request.onsuccess = () => resolve();
-                    request.onerror = (e) => reject(e.target.error);
-                });
+            getByMobile: function(mobile) {
+                return this.getAll().filter(p => p.contact === mobile);
             }
         };
 
@@ -157,11 +142,50 @@
             reader.onerror = error => reject(error);
         });
 
-        window.deleteProperty = async function(id) {
+        window.deleteProperty = function(id) {
             if (confirm('Are you sure you want to permanently delete this property?')) {
-                await propertyDB.delete(id);
-                if (document.getElementById('admin-portal-container').style.display !== 'none') { await loadAdminProperties(); await loadAllProperties(); }
-                if (document.getElementById('user-portal-container').style.display !== 'none') { await loadUserProperties(); }
+                propertyStorage.delete(id);
+                if (document.getElementById('admin-portal-container').style.display !== 'none') { loadAdminProperties(); }
+                if (document.getElementById('user-portal-container').style.display !== 'none') { loadUserProperties(); }
+            }
+        }
+
+        window.editProperty = function(id) {
+            const properties = propertyStorage.getAll();
+            const property = properties.find(p => p.id === id);
+            if (!property) return;
+
+            if (document.getElementById('admin-portal-container').style.display !== 'none') {
+                // Admin editing
+                document.getElementById('adminPropertyId').value = property.id;
+                document.getElementById('adminPropertyTitle').value = property.title;
+                document.getElementById('adminPropertyType').value = property.type;
+                document.getElementById('adminListingType').value = property.listingType;
+                document.getElementById('adminPrice').value = property.price;
+                document.getElementById('adminSize').value = property.size;
+                document.getElementById('adminBedrooms').value = property.bedrooms;
+                document.getElementById('adminBathrooms').value = property.bathrooms;
+                document.getElementById('adminLocation').value = property.location;
+                document.getElementById('adminDescription').value = property.description;
+                document.getElementById('adminContact').value = property.contact;
+                document.getElementById('admin-form-title').innerHTML = '<i class="fas fa-edit me-2"></i>Edit Property';
+                
+                // Switch to Add Property tab
+                document.getElementById('add-property-tab').click();
+            } else {
+                // User editing
+                document.getElementById('propertyId').value = property.id;
+                document.getElementById('userPropertyTitle').value = property.title;
+                document.getElementById('userPropertyType').value = property.type;
+                document.getElementById('userListingType').value = property.listingType;
+                document.getElementById('userPrice').value = property.price;
+                document.getElementById('userSize').value = property.size;
+                document.getElementById('userBedrooms').value = property.bedrooms;
+                document.getElementById('userBathrooms').value = property.bathrooms;
+                document.getElementById('userLocation').value = property.location;
+                document.getElementById('userDescription').value = property.description;
+                document.getElementById('userContact').value = property.contact;
+                document.getElementById('form-title').innerHTML = '<i class="fas fa-edit me-2"></i>Edit Property';
             }
         }
 
@@ -232,242 +256,219 @@
              });
         }
 
-
         // --- User Portal Logic ---
         document.addEventListener('DOMContentLoaded', function() {
             const loginView = document.getElementById('login-view'), mainContentView = document.getElementById('main-content');
             const userLoginForm = document.getElementById('user-login-form'), logoutBtn = document.getElementById('logout-btn');
             const userPropertyForm = document.getElementById('user-property-form'), userPropertyList = document.getElementById('user-property-list');
 
-            let currentUserMobile = '', userImageUploader = null, isEditingUser = false;
-            userLoginForm.addEventListener('submit', (e) => { e.preventDefault(); currentUserMobile = document.getElementById('mobileNumber').value.trim(); if (currentUserMobile) { loginView.classList.add('d-none'); mainContentView.classList.remove('d-none'); logoutBtn.classList.remove('d-none'); loadUserProperties(); } });
-            logoutBtn.addEventListener('click', () => { currentUserMobile = ''; loginView.classList.remove('d-none'); mainContentView.classList.add('d-none'); logoutBtn.classList.add('d-none'); clearUserForm(); });
+            let currentUserMobile = '';
+            const userImageUploader = setupImageUploader('user-images', 'add-user-images', 'user-image-previews');
+            setupVideoPreview('user-video', 'user-video-preview');
 
-            userPropertyForm.addEventListener('submit', async (e) => {
+            userLoginForm.addEventListener('submit', function(e) {
                 e.preventDefault();
-                const formData = new FormData(userPropertyForm);
-                const propertyData = {
-                    id: document.getElementById('propertyId').value || 'user-' + Date.now(),
-                    title: document.getElementById('userPropertyTitle').value, type: document.getElementById('userPropertyType').value, listingType: document.getElementById('userListingType').value,
-                    price: parseFloat(document.getElementById('userPrice').value), size: parseFloat(document.getElementById('userSize').value), bedrooms: parseInt(document.getElementById('userBedrooms').value),
-                    bathrooms: parseInt(document.getElementById('userBathrooms').value), location: document.getElementById('userLocation').value, description: document.getElementById('userDescription').value,
-                    contact: document.getElementById('userContact').value, ownerMobile: currentUserMobile, images: [], video: null, createdAt: isEditingUser ? document.getElementById('propertyId').value.split('-')[1] : Date.now()
-                };
-
-                if (userImageUploader) {
-                    for (const file of userImageUploader.getFiles()) { propertyData.images.push(await toBase64(file)); }
+                const mobile = document.getElementById('mobileNumber').value.trim();
+                if (mobile) {
+                    currentUserMobile = mobile;
+                    loginView.classList.add('d-none');
+                    mainContentView.classList.remove('d-none');
+                    logoutBtn.classList.remove('d-none');
+                    loadUserProperties();
                 }
-                const videoFile = document.getElementById('user-video').files[0];
-                if (videoFile) { propertyData.video = await toBase64(videoFile); }
-
-                await propertyDB.put(propertyData);
-                clearUserForm();
-                await loadUserProperties();
             });
 
-            window.editUserProperty = async function(id) {
-                const properties = await propertyDB.getAll();
-                const property = properties.find(p => p.id === id);
-                if (property) {
-                    document.getElementById('propertyId').value = property.id;
-                    document.getElementById('userPropertyTitle').value = property.title;
-                    document.getElementById('userPropertyType').value = property.type;
-                    document.getElementById('userListingType').value = property.listingType;
-                    document.getElementById('userPrice').value = property.price;
-                    document.getElementById('userSize').value = property.size;
-                    document.getElementById('userBedrooms').value = property.bedrooms;
-                    document.getElementById('userBathrooms').value = property.bathrooms;
-                    document.getElementById('userLocation').value = property.location;
-                    document.getElementById('userDescription').value = property.description;
-                    document.getElementById('userContact').value = property.contact;
-                    document.getElementById('form-title').innerHTML = '<i class="fas fa-edit me-2"></i>Edit Property';
-                    isEditingUser = true;
+            logoutBtn.addEventListener('click', function() {
+                loginView.classList.remove('d-none');
+                mainContentView.classList.add('d-none');
+                logoutBtn.classList.add('d-none');
+                document.getElementById('mobileNumber').value = '';
+                clearUserForm();
+                currentUserMobile = '';
+            });
+
+            userPropertyForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                const property = {
+                    id: document.getElementById('propertyId').value || null,
+                    title: document.getElementById('userPropertyTitle').value,
+                    type: document.getElementById('userPropertyType').value,
+                    listingType: document.getElementById('userListingType').value,
+                    price: parseInt(document.getElementById('userPrice').value),
+                    size: parseInt(document.getElementById('userSize').value),
+                    bedrooms: parseInt(document.getElementById('userBedrooms').value),
+                    bathrooms: parseInt(document.getElementById('userBathrooms').value),
+                    location: document.getElementById('userLocation').value,
+                    description: document.getElementById('userDescription').value,
+                    contact: currentUserMobile,
+                    images: [],
+                    video: null,
+                    dateAdded: new Date().toISOString()
+                };
+
+                // Process images
+                const imageFiles = userImageUploader.getFiles();
+                for (const file of imageFiles) {
+                    const base64 = await toBase64(file);
+                    property.images.push(base64);
                 }
-            };
 
-            async function loadUserProperties() {
-                const properties = await propertyDB.getAll();
-                const userProperties = properties.filter(p => p.ownerMobile === currentUserMobile);
-                userPropertyList.innerHTML = userProperties.length === 0 ? '<p class="text-muted text-center">No properties listed yet.</p>' : userProperties.map(property => `
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h6 class="card-title">${property.title}</h6>
-                                    <p class="card-text text-muted mb-1">${property.type} - ${property.listingType}</p>
-                                    <p class="card-text"><strong>PKR ${property.price.toLocaleString()}</strong> | ${property.size} Sq. Yd.</p>
-                                    <p class="card-text"><small class="text-muted">${property.location}</small></p>
-                                </div>
-                                <div class="btn-group btn-group-sm">
-                                    <button onclick="editUserProperty('${property.id}')" class="btn btn-outline-primary"><i class="fas fa-edit"></i></button>
-                                    <button onclick="deleteProperty('${property.id}')" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
+                // Process video
+                const videoFile = document.getElementById('user-video').files[0];
+                if (videoFile) {
+                    property.video = await toBase64(videoFile);
+                }
 
-            function clearUserForm() {
+                propertyStorage.save(property);
+                alert('Property saved successfully!');
+                clearUserForm();
+                loadUserProperties();
+            });
+
+            window.clearUserForm = function() {
                 userPropertyForm.reset();
                 document.getElementById('propertyId').value = '';
                 document.getElementById('form-title').innerHTML = '<i class="fas fa-plus-circle me-2"></i>Add New Property';
-                if (userImageUploader) { userImageUploader.clear(); }
+                userImageUploader.clear();
                 document.getElementById('user-video-preview').innerHTML = '';
-                isEditingUser = false;
-            }
-            window.clearUserForm = clearUserForm;
+            };
 
-            userImageUploader = setupImageUploader('user-images', 'add-user-images', 'user-image-previews');
-            setupVideoPreview('user-video', 'user-video-preview');
+            function loadUserProperties() {
+                const properties = propertyStorage.getByMobile(currentUserMobile);
+                const listContainer = document.getElementById('user-property-list');
+                
+                if (properties.length === 0) {
+                    listContainer.innerHTML = '<p class="text-muted text-center">No properties added yet.</p>';
+                    return;
+                }
+
+                listContainer.innerHTML = properties.map(property => `
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-md-3">
+                                    ${property.images.length > 0 ? `<img src="${property.images[0]}" class="img-fluid rounded" style="height: 100px; object-fit: cover;">` : '<div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 100px;"><i class="fas fa-image text-muted"></i></div>'}
+                                </div>
+                                <div class="col-md-6">
+                                    <h6 class="card-title">${property.title}</h6>
+                                    <p class="card-text small text-muted mb-1">${property.type} • ${property.listingType}</p>
+                                    <p class="card-text small text-muted mb-1">${property.location}</p>
+                                    <p class="card-text small"><strong>PKR ${property.price.toLocaleString()}</strong></p>
+                                </div>
+                                <div class="col-md-3">
+                                    <div class="btn-group-vertical d-grid gap-1">
+                                        <button class="btn btn-sm btn-outline-primary" onclick="editProperty('${property.id}')"><i class="fas fa-edit"></i> Edit</button>
+                                        <button class="btn btn-sm btn-outline-danger" onclick="deleteProperty('${property.id}')"><i class="fas fa-trash"></i> Delete</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
         });
 
         // --- Admin Portal Logic ---
-        document.addEventListener('DOMContentLoaded', function() {
-            const adminLoginContainer = document.getElementById('admin-login-container'), adminPanel = document.getElementById('admin-panel');
-            const adminLoginForm = document.getElementById('admin-login-form');
-            const adminPropertyForm = document.getElementById('admin-property-form'), adminPropertyList = document.getElementById('admin-property-list');
+        document.getElementById('admin-login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const username = document.getElementById('adminUsername').value;
+            const password = document.getElementById('adminPassword').value;
+            
+            // Simple authentication (in production, use proper authentication)
+            if (username === 'admin' && password === 'mohsin123') {
+                document.getElementById('admin-login-container').style.display = 'none';
+                document.getElementById('admin-panel').style.display = 'block';
+                loadAdminProperties();
+            } else {
+                alert('Invalid credentials. Use admin/mohsin123');
+            }
+        });
 
-            let adminImageUploader = null, isEditingAdmin = false;
-            adminLoginForm.addEventListener('submit', (e) => { e.preventDefault(); const username = document.getElementById('adminUsername').value, password = document.getElementById('adminPassword').value; if (username === 'admin' && password === 'mohsinestate123') { adminLoginContainer.style.display = 'none'; adminPanel.style.display = 'block'; loadAdminProperties(); loadAllProperties(); } else { alert('Invalid credentials!'); } });
+        const adminImageUploader = setupImageUploader('admin-images', 'add-admin-images', 'admin-image-previews');
+        setupVideoPreview('admin-video', 'admin-video-preview');
 
-            adminPropertyForm.addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const propertyData = {
-                    id: document.getElementById('adminPropertyId').value || 'admin-' + Date.now(),
-                    title: document.getElementById('adminPropertyTitle').value, type: document.getElementById('adminPropertyType').value, listingType: document.getElementById('adminListingType').value,
-                    price: parseFloat(document.getElementById('adminPrice').value), size: parseFloat(document.getElementById('adminSize').value), bedrooms: parseInt(document.getElementById('adminBedrooms').value),
-                    bathrooms: parseInt(document.getElementById('adminBathrooms').value), location: document.getElementById('adminLocation').value, description: document.getElementById('adminDescription').value,
-                    contact: document.getElementById('adminContact').value, ownerMobile: 'admin', images: [], video: null, createdAt: isEditingAdmin ? document.getElementById('adminPropertyId').value.split('-')[1] : Date.now()
-                };
-
-                if (adminImageUploader) {
-                    for (const file of adminImageUploader.getFiles()) { propertyData.images.push(await toBase64(file)); }
-                }
-                const videoFile = document.getElementById('admin-video').files[0];
-                if (videoFile) { propertyData.video = await toBase64(videoFile); }
-
-                await propertyDB.put(propertyData);
-                clearAdminForm();
-                await loadAdminProperties();
-                await loadAllProperties();
-            });
-
-            window.editAdminProperty = async function(id) {
-                const properties = await propertyDB.getAll();
-                const property = properties.find(p => p.id === id);
-                if (property) {
-                    document.getElementById('adminPropertyId').value = property.id;
-                    document.getElementById('adminPropertyTitle').value = property.title;
-                    document.getElementById('adminPropertyType').value = property.type;
-                    document.getElementById('adminListingType').value = property.listingType;
-                    document.getElementById('adminPrice').value = property.price;
-                    document.getElementById('adminSize').value = property.size;
-                    document.getElementById('adminBedrooms').value = property.bedrooms;
-                    document.getElementById('adminBathrooms').value = property.bathrooms;
-                    document.getElementById('adminLocation').value = property.location;
-                    document.getElementById('adminDescription').value = property.description;
-                    document.getElementById('adminContact').value = property.contact;
-                    document.getElementById('admin-form-title').innerHTML = '<i class="fas fa-edit me-2"></i>Edit Property';
-                    document.getElementById('add-property-tab').click();
-                    isEditingAdmin = true;
-                }
+        document.getElementById('admin-property-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const property = {
+                id: document.getElementById('adminPropertyId').value || null,
+                title: document.getElementById('adminPropertyTitle').value,
+                type: document.getElementById('adminPropertyType').value,
+                listingType: document.getElementById('adminListingType').value,
+                price: parseInt(document.getElementById('adminPrice').value),
+                size: parseInt(document.getElementById('adminSize').value),
+                bedrooms: parseInt(document.getElementById('adminBedrooms').value),
+                bathrooms: parseInt(document.getElementById('adminBathrooms').value),
+                location: document.getElementById('adminLocation').value,
+                description: document.getElementById('adminDescription').value,
+                contact: document.getElementById('adminContact').value,
+                images: [],
+                video: null,
+                dateAdded: new Date().toISOString()
             };
 
-            async function loadAdminProperties() {
-                const properties = await propertyDB.getAll();
-                const adminProperties = properties.filter(p => p.ownerMobile === 'admin');
-                adminPropertyList.innerHTML = adminProperties.length === 0 ? '<p class="text-muted text-center">No admin properties added yet.</p>' : adminProperties.map(property => `
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h6 class="card-title">${property.title}</h6>
-                                    <p class="card-text text-muted mb-1">${property.type} - ${property.listingType}</p>
-                                    <p class="card-text"><strong>PKR ${property.price.toLocaleString()}</strong> | ${property.size} Sq. Yd.</p>
-                                    <p class="card-text"><small class="text-muted">${property.location}</small></p>
-                                </div>
-                                <div class="btn-group btn-group-sm">
-                                    <button onclick="editAdminProperty('${property.id}')" class="btn btn-outline-primary"><i class="fas fa-edit"></i></button>
-                                    <button onclick="deleteProperty('${property.id}')" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
+            // Process images
+            const imageFiles = adminImageUploader.getFiles();
+            for (const file of imageFiles) {
+                const base64 = await toBase64(file);
+                property.images.push(base64);
             }
 
-            async function loadAllProperties() {
-                const properties = await propertyDB.getAll();
-                const allPropertiesContainer = document.getElementById('all-properties');
-                if (!allPropertiesContainer) return;
-                
-                const allPropertiesList = document.createElement('div');
-                allPropertiesList.innerHTML = properties.length === 0 ? '<p class="text-muted text-center">No properties in the system.</p>' : properties.map(property => `
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <div class="d-flex justify-content-between align-items-start">
-                                <div>
-                                    <h6 class="card-title">${property.title} <span class="badge bg-${property.ownerMobile === 'admin' ? 'primary' : 'secondary'}">${property.ownerMobile === 'admin' ? 'Admin' : 'User'}</span></h6>
-                                    <p class="card-text text-muted mb-1">${property.type} - ${property.listingType}</p>
-                                    <p class="card-text"><strong>PKR ${property.price.toLocaleString()}</strong> | ${property.size} Sq. Yd.</p>
-                                    <p class="card-text"><small class="text-muted">${property.location}</small></p>
-                                    <p class="card-text"><small class="text-muted">Contact: ${property.contact}</small></p>
-                                </div>
-                                <div class="btn-group btn-group-sm">
-                                    <button onclick="deleteProperty('${property.id}')" class="btn btn-outline-danger"><i class="fas fa-trash"></i></button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-                
-                const existingList = allPropertiesContainer.querySelector('div:not(.nav-tabs):not(.tab-content)');
-                if (existingList) {
-                    existingList.replaceWith(allPropertiesList);
-                } else {
-                    allPropertiesContainer.appendChild(allPropertiesList);
-                }
+            // Process video
+            const videoFile = document.getElementById('admin-video').files[0];
+            if (videoFile) {
+                property.video = await toBase64(videoFile);
             }
 
-            function clearAdminForm() {
-                adminPropertyForm.reset();
-                document.getElementById('adminPropertyId').value = '';
-                document.getElementById('admin-form-title').innerHTML = '<i class="fas fa-plus-circle me-2"></i>Add New Property';
-                if (adminImageUploader) { adminImageUploader.clear(); }
-                document.getElementById('admin-video-preview').innerHTML = '';
-                isEditingAdmin = false;
-            }
-            window.clearAdminForm = clearAdminForm;
-
-            adminImageUploader = setupImageUploader('admin-images', 'add-admin-images', 'admin-image-previews');
-            setupVideoPreview('admin-video', 'admin-video-preview');
+            propertyStorage.save(property);
+            alert('Property saved successfully!');
+            clearAdminForm();
+            loadAdminProperties();
         });
+
+        window.clearAdminForm = function() {
+            document.getElementById('admin-property-form').reset();
+            document.getElementById('adminPropertyId').value = '';
+            document.getElementById('admin-form-title').innerHTML = '<i class="fas fa-plus-circle me-2"></i>Add New Property';
+            adminImageUploader.clear();
+            document.getElementById('admin-video-preview').innerHTML = '';
+        };
+
+        function loadAdminProperties() {
+            const properties = propertyStorage.getAll();
+            const listContainer = document.getElementById('admin-property-list');
+            
+            if (properties.length === 0) {
+                listContainer.innerHTML = '<p class="text-muted text-center">No properties in database.</p>';
+                return;
+            }
+
+            listContainer.innerHTML = properties.map(property => `
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-3">
+                                ${property.images.length > 0 ? `<img src="${property.images[0]}" class="img-fluid rounded" style="height: 100px; object-fit: cover;">` : '<div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 100px;"><i class="fas fa-image text-muted"></i></div>'}
+                            </div>
+                            <div class="col-md-6">
+                                <h6 class="card-title">${property.title}</h6>
+                                <p class="card-text small text-muted mb-1">${property.type} • ${property.listingType}</p>
+                                <p class="card-text small text-muted mb-1">${property.location}</p>
+                                <p class="card-text small"><strong>PKR ${property.price.toLocaleString()}</strong> • Contact: ${property.contact}</p>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="btn-group-vertical d-grid gap-1">
+                                    <button class="btn btn-sm btn-outline-primary" onclick="editProperty('${property.id}')"><i class="fas fa-edit"></i> Edit</button>
+                                    <button class="btn btn-sm btn-outline-danger" onclick="deleteProperty('${property.id}')"><i class="fas fa-trash"></i> Delete</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Load admin properties when All Properties tab is clicked
+        document.getElementById('all-properties-tab').addEventListener('click', loadAdminProperties);
     </script>
-<script>
-document.getElementById("admin-property-form").addEventListener("submit", async function(e) {
-  e.preventDefault();
-  const propertyData = {
-    title: document.getElementById("adminPropertyTitle").value,
-    location: document.getElementById("adminPropertyLocation").value,
-    status: document.getElementById("adminPropertyStatus").value,
-    beds: document.getElementById("adminPropertyBeds").value,
-    baths: document.getElementById("adminPropertyBaths").value,
-    area: document.getElementById("adminPropertyArea").value,
-    price: document.getElementById("adminPropertyPrice").value,
-    images: [document.getElementById("adminPropertyImage").value],
-    video: document.getElementById("adminPropertyVideo").value
-  };
-
-  await fetch("/api/properties", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(propertyData)
-  });
-
-  alert("Property saved!");
-  e.target.reset();
-});
-</script>
 </body>
 </html>
