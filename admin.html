@@ -444,5 +444,30 @@
             setupVideoPreview('admin-video', 'admin-video-preview');
         });
     </script>
+<script>
+document.getElementById("admin-property-form").addEventListener("submit", async function(e) {
+  e.preventDefault();
+  const propertyData = {
+    title: document.getElementById("adminPropertyTitle").value,
+    location: document.getElementById("adminPropertyLocation").value,
+    status: document.getElementById("adminPropertyStatus").value,
+    beds: document.getElementById("adminPropertyBeds").value,
+    baths: document.getElementById("adminPropertyBaths").value,
+    area: document.getElementById("adminPropertyArea").value,
+    price: document.getElementById("adminPropertyPrice").value,
+    images: [document.getElementById("adminPropertyImage").value],
+    video: document.getElementById("adminPropertyVideo").value
+  };
+
+  await fetch("/api/properties", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(propertyData)
+  });
+
+  alert("Property saved!");
+  e.target.reset();
+});
+</script>
 </body>
 </html>
